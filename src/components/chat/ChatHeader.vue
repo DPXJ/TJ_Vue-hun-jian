@@ -85,8 +85,8 @@ import {
   UserOutlined, 
   SettingOutlined, 
   LogoutOutlined,
-  SunOutlined,
-  BulbOutlined,
+  SunFilled,
+  BulbFilled,
   ThunderboltFilled
 } from '@ant-design/icons-vue'
 
@@ -108,13 +108,13 @@ const emit = defineEmits<{
 const getThemeIcon = computed(() => {
   switch (props.currentTheme) {
     case 'light':
-      return SunOutlined
+      return SunFilled
     case 'dark':
-      return BulbOutlined
+      return BulbFilled
     case 'ai-glow':
       return ThunderboltFilled
     default:
-      return SunOutlined
+      return SunFilled
   }
 })
 

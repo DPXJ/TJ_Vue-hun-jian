@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import ChatHeader from '@/components/chat/ChatHeader.vue'
+import ChatHeader from '@/components/chat/ChatHeaderSimple.vue'
 import ChatMessages from '@/components/chat/ChatMessages.vue'
 import ChatInput from '@/components/chat/ChatInput.vue'
 
