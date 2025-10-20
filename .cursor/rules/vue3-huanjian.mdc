@@ -1,0 +1,185 @@
+---
+alwaysApply: true
+---
+
+# Vue3 AI交互前端开发规则
+
+## 技术栈要求
+- **前端框架**: Vue 3 + Composition API + TypeScript
+- **UI组件库**: Ant Design Vue (antdv) - 使用Vue3技术栈配合Ant Design设计风格
+- **状态管理**: Pinia
+- **路由**: Vue Router 4
+- **构建工具**: Vite
+- **样式**: Less/SCSS + CSS Variables (支持主题切换)
+
+## 设计风格要求
+
+### 1. AI聊天交互风格
+- **主界面**: 以聊天框为核心，参考Genspark、Kimi等主流AI产品
+- **消息气泡**: 圆角设计，用户消息右对齐，AI回复左对齐
+- **输入框**: 底部固定，支持多行输入，带发送按钮
+- **AI回复**: 支持Markdown渲染，代码高亮，链接预览
+
+### 2. 智能卡片组件
+- **动态卡片**: AI根据用户指令生成对应的操作卡片
+- **卡片类型**: 文件上传、表单填写、选择器、确认操作等
+- **交互反馈**: 卡片操作后提供即时反馈和状态更新
+- **示例场景**: 用户输入"上传视频素材" → AI回复上传卡片组件
+
+### 3. 主题系统
+- **黑白主题**: 简洁的深色/浅色模式
+- **AI流光主题**: 彩色渐变，科技感强
+- **主题切换**: 支持一键切换，保持全局一致性
+- **CSS变量**: 使用CSS自定义属性实现主题变量
+
+## 组件设计规范
+
+### 1. 核心组件结构
+```vue
+<template>
+  <div class="ai-chat-container">
+    <ChatHeader />
+    <ChatMessages />
+    <ChatInput />
+    <SmartCards />
+  </div>
+</template>
+```
+
+### 2. 消息组件规范
+- **用户消息**: 蓝色气泡，右对齐
+- **AI消息**: 灰色气泡，左对齐，支持Markdown
+- **系统消息**: 居中显示，提示性信息
+- **加载状态**: 打字机效果，显示"正在思考..."
+
+### 3. 智能卡片组件
+- **文件上传卡片**: 拖拽上传，进度显示
+- **表单卡片**: 动态表单，实时验证
+- **选择卡片**: 多选/单选，支持搜索
+- **确认卡片**: 操作确认，带取消/确认按钮
+
+## 接口设计规范
+
+### 1. API接口预留
+```typescript
+// 聊天接口
+interface ChatAPI {
+  sendMessage(message: string): Promise<ChatResponse>
+  uploadFile(file: File): Promise<UploadResponse>
+  getHistory(): Promise<ChatHistory[]>
+}
+
+// 响应数据结构
+interface ChatResponse {
+  type: 'text' | 'card' | 'file'
+  content: string
+  cardType?: 'upload' | 'form' | 'select' | 'confirm'
+  cardData?: any
+  timestamp: number
+}
+```
+
+### 2. 模拟数据
+- 使用Mock数据模拟后端响应
+- 预设常见的AI回复模板
+- 模拟文件上传、处理等异步操作
+
+## 样式规范
+
+### 1. CSS变量定义
+```css
+:root {
+  /* 黑白主题 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  
+  /* AI流光主题 */
+  --ai-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --ai-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+[data-theme="ai-glow"] {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --text-primary: #ffffff;
+  --ai-accent: #667eea;
+}
+```
+
+### 2. 响应式设计
+- 移动端优先设计
+- 支持桌面端扩展
+- 聊天界面自适应屏幕尺寸
+
+## 交互规范
+
+### 1. 用户操作流程
+1. 用户输入问题/指令
+2. AI分析并生成回复
+3. 如需要操作，显示对应卡片
+4. 用户完成卡片操作
+5. 系统反馈操作结果
+
+### 2. 状态管理
+- 聊天历史状态
+- 当前主题状态
+- 用户偏好设置
+- 文件上传状态
+
+## 开发要求
+
+### 1. 代码规范
+- 使用TypeScript严格模式
+- 组件命名采用PascalCase
+- 文件命名采用kebab-case
+- 使用Composition API编写组件
+
+### 2. 性能优化
+- 虚拟滚动处理长聊天记录
+- 图片懒加载
+- 组件按需加载
+- 防抖处理用户输入
+
+### 3. 错误处理
+- 网络请求错误处理
+- 文件上传失败处理
+- 用户操作异常处理
+- 友好的错误提示
+
+## 示例实现
+
+### 主题切换组件
+```vue
+<template>
+  <div class="theme-switcher">
+    <a-button @click="toggleTheme">
+      {{ currentTheme === 'dark' ? '切换到AI流光' : '切换到黑白' }}
+    </a-button>
+  </div>
+</template>
+```
+
+### 智能卡片组件
+```vue
+<template>
+  <div class="smart-card" :class="cardType">
+    <component :is="cardComponent" v-bind="cardProps" />
+  </div>
+</template>
+```
+
+## 一致性保证
+- 所有组件使用统一的设计系统
+- 颜色、字体、间距保持一致
+- 交互行为标准化
+- 错误状态统一处理
+- 加载状态统一显示
+
+## 注意事项
+- 这是演示原型，重点在界面和交互完整性
+- 后端接口使用Mock数据，但保持接口规范
+- 确保所有功能在前端层面可用
+- 主题切换要全局生效，无遗漏
+- 保持代码结构清晰，便于后续扩展

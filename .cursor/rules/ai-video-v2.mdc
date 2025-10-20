@@ -1,0 +1,137 @@
+---
+alwaysApply: true
+description: AI视频混剪 V2.0 前端实现规则（Vue3+Ant Design Vue）
+tags: [vue3, antdv, ai-chat, mock, theme]
+---
+
+## 目标
+- 以“对话式/指令式”为核心的人机交互，界面风格参考 Genspark/Kimi。
+- 在聊天消息流中生成“智能卡片”，承载上传/选择/表单/确认等操作。
+- 仅需前端可交互原型；后端以 Mock 数据模拟，接口结构需规范化。
+
+## 技术栈与基础规范
+- 框架：Vue 3 + Composition API + TypeScript
+- 组件库：Ant Design Vue（Antd Vue）
+- 路由：Vue Router 4；状态：Pinia
+- 构建：Vite；样式：Less/SCSS + CSS Variables
+- 代码规范：组件 PascalCase，文件 kebab-case，严格 TS；避免深层嵌套，优先早返回。
+
+## 信息架构
+```
+src/
+  app/
+    App.vue
+    router.ts
+    store/
+      chat.store.ts
+      theme.store.ts
+    styles/
+      variables.css  // 主题CSS变量
+  components/
+    chat/
+      ChatHeader.vue
+      ChatMessages.vue
+      ChatInput.vue
+    cards/
+      UploadCard.vue
+      SelectCard.vue
+      FormCard.vue
+      ConfirmCard.vue
+  mocks/
+    chat.mock.ts     // Mock API与模板
+  apis/
+    chat.api.ts      // 接口定义+Mock实现
+  pages/
+    ChatHome.vue     // 主界面
+```
+
+## 交互规范
+### 聊天界面
+- 消息流：AI消息左、用户消息右、系统消息居中；支持 Markdown、高亮、链接预览。
+- 输入区：多行输入、自适应高度；含“发送/上传/模板”快捷入口。
+- 顶部：标题、新建对话、导出视频、主题切换。
+- 长列表：必须启用虚拟滚动。
+
+### 智能卡片
+- 类型：upload | select | form | confirm。
+- 呈现：作为一条消息插入消息流；每张卡片必须有描述与操作反馈（loading/success/error）。
+- 典型触发：
+  - “上传视频素材” → UploadCard（拖拽/点击、进度、结果反馈）。
+  - “选择配音音色/转场模板” → SelectCard（单/多选、可搜索、可试听）。
+  - “设置标题与封面”等 → FormCard（动态表单，校验，提交）。
+  - “开始渲染/删除素材？” → ConfirmCard（确认/取消）。
+
+## 主题系统
+- 主题：light（黑白简洁）、dark、ai-glow（流光科技）。
+- 要求：所有颜色、阴影、背景、圆角、边距使用 CSS 变量；切换通过 `data-theme`。
+
+```css
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text-primary: #111;
+  --text-secondary: #666;
+  --brand: #1677ff; /* antd 主色 */
+}
+[data-theme="dark"] {
+  --bg-primary: #0f1115;
+  --bg-secondary: #171a21;
+  --text-primary: #e5e7eb;
+}
+[data-theme="ai-glow"] {
+  --bg-primary: #12121a;
+  --bg-secondary: #0e0e15;
+  --text-primary: #eef3ff;
+  --ai-gradient: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  --ai-glow: 0 0 24px rgba(118,75,162,.35);
+}
+```
+
+## API 约定（原型阶段）
+```ts
+export interface ChatAPI {
+  sendMessage(message: string): Promise<ChatResponse>
+  uploadFile(file: File): Promise<UploadResponse>
+  getHistory(): Promise<ChatHistory[]>
+}
+
+export interface ChatResponse {
+  type: 'text' | 'card'
+  content: string
+  cardType?: 'upload' | 'form' | 'select' | 'confirm'
+  cardData?: any
+  timestamp: number
+}
+```
+- 实现：默认使用 `apis/chat.api.ts` 内的 Mock；后续可无缝替换为真实后端。
+- 错误：所有失败通过系统消息与卡片内状态提示。
+
+## Mock 规则
+- 预置问答/指令模板：上传/选择音色/添加转场/应用模板/渲染等。
+- 上传：模拟进度、成功/失败分支；失败需展示原因与重试按钮。
+- 异步：渲染任务模拟“排队→渲染中→成功/失败”。
+
+## 多用户（原型）
+- 登录态以本地存储/Pinia 模拟；不同用户的项目与历史隔离在 store 命名空间中。
+
+## 性能与可用性
+- 虚拟列表、懒加载、组件按需加载；输入发送需即时反馈；键盘快捷键：Enter 发送、Shift+Enter 换行。
+
+## 与 Ant Design Vue 的结合
+- 采用 antdv 的 Button/Input/Upload/Select/Form/Modal 等组件，样式通过 CSS 变量覆盖，保证与 Vue3 技术栈兼容。
+
+## 验收清单（原型达到“可演示”标准）
+- 聊天页面：消息渲染、Markdown、高亮、系统消息、思考中动画。
+- 四类智能卡片：均可独立演示并在消息流中交互闭环。
+- 主题切换：三主题一键切换，全局同步生效，无漏样式。
+- Mock API：三接口可用，含成功/失败分支与异步模拟。
+- 多用户：基本登录态与数据隔离（原型级）。
+
+## 使用方法
+1) 将本规则与 `vue3-huanjian.mdc` 同时保持 `alwaysApply: true`。
+2) 新建功能/组件时，遵循本文件的信息架构与接口约定；需要“卡片”时，优先复用现有四类卡片基类。
+3) 与助手对话时，可直接说：
+   - “生成 ChatHome 页面（按本规则）”
+   - “新增 SelectCard 支持音色试听与搜索”
+   - “实现主题切换并绑定到头部按钮”
+
