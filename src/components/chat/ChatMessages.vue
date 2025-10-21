@@ -23,7 +23,7 @@
         <!-- AI消息 -->
         <div v-else-if="message.type === 'ai'" class="message-bubble ai-message">
           <div class="ai-avatar">
-            <ThunderboltFilled />
+            <LoadingOutlined />
           </div>
           <div class="message-wrapper">
             <div class="message-content">
@@ -62,7 +62,7 @@
       <div v-if="isLoading" class="message-item message-ai">
         <div class="message-bubble ai-message">
           <div class="ai-avatar">
-            <ThunderboltFilled />
+            <LoadingOutlined />
           </div>
           <div class="message-wrapper">
             <div class="message-content loading-content">
@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 import { ref, nextTick, watch, onMounted } from 'vue'
-import { ThunderboltFilled, ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { LoadingOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import UploadCard from '@/components/cards/UploadCard.vue'
 import SelectCard from '@/components/cards/SelectCard.vue'

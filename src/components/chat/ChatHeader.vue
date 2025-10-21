@@ -85,9 +85,9 @@ import {
   UserOutlined, 
   SettingOutlined, 
   LogoutOutlined,
-  SunFilled,
-  BulbFilled,
-  ThunderboltFilled
+  BgColorsOutlined,
+  SkinOutlined,
+  FireOutlined
 } from '@ant-design/icons-vue'
 
 // Props
@@ -108,13 +108,13 @@ const emit = defineEmits<{
 const getThemeIcon = computed(() => {
   switch (props.currentTheme) {
     case 'light':
-      return SunFilled
+      return BgColorsOutlined
     case 'dark':
-      return BulbFilled
+      return SkinOutlined
     case 'ai-glow':
-      return ThunderboltFilled
+      return FireOutlined
     default:
-      return SunFilled
+      return BgColorsOutlined
   }
 })
 

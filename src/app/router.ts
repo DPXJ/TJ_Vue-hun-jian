@@ -1,15 +1,42 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import GensparkHome from '@/pages/GensparkHome.vue'
+import ChatHome from '@/pages/ChatHome.vue'
 import ChatHomeFull from '@/pages/ChatHomeFull.vue'
 import HelloWorld from '@/pages/HelloWorld.vue'
 import ChatHomeSimple from '@/pages/ChatHomeSimple.vue'
+import TestSimple from '@/pages/TestSimple.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'ChatHome',
+    name: 'Home',
     component: ChatHomeFull,
     meta: {
       title: 'AI视频混剪V2.0'
+    }
+  },
+  {
+    path: '/genspark',
+    name: 'Genspark',
+    component: GensparkHome,
+    meta: {
+      title: 'Genspark 超级智能体 - AI视频混剪'
+    }
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: ChatHome,
+    meta: {
+      title: 'AI对话 - 视频混剪助手'
+    }
+  },
+  {
+    path: '/full',
+    name: 'ChatHomeFull',
+    component: ChatHomeFull,
+    meta: {
+      title: 'AI视频混剪V2.0 - 完整版'
     }
   },
   {
@@ -26,6 +53,14 @@ const routes = [
     component: HelloWorld,
     meta: {
       title: '测试页面'
+    }
+  },
+  {
+    path: '/testsimple',
+    name: 'TestSimple',
+    component: TestSimple,
+    meta: {
+      title: '简单测试'
     }
   },
   {
